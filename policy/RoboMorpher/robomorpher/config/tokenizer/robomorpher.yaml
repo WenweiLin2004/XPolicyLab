@@ -1,0 +1,100 @@
+# Pretrain the morphology tokenizer on joint angles and link poses.
+train_data_dir: ${oc.env:ROBOMORPHER_TOKENIZER_ROOT,./data/tokenizer}/lazy_data/home_pose_ik_40m
+batch_size: 4096
+gradient_accumulation_steps: 1
+mixed_precision: bf16
+epochs: 300
+save_every_epoch: 2
+eval_every_epoch: 1
+seed: 42
+# Keep this directory name aligned with the config filename.
+save_path: ./robomorpher/pretrained/tokenizer/robomorpher
+max_grad_norm: 1.0
+max_checkpoints: 8
+normalization_method: minmax
+normalization_scope: shared_feature
+joint_angle_wrap: "none"
+test_split: 0.001
+num_workers: 12
+stats_workers: 16
+optim:
+  lr: 1.0e-05
+  weight_decay: 0.01
+  betas:
+  - 0.9
+  - 0.999
+  scheduler: cosine
+  cosine_epochs: 300
+  warmup_steps: 1000
+  min_lr: 1.0e-06
+vqvae_model:
+  max_num_joints: 7
+  load_dir: null
+  input:
+    joint_info_dim: 7
+    urdf_rotation_6d: false
+  encoder:
+    input_with_ee: false
+    attention: bidirectional
+    n_latent_dims: 1024
+    n_head: 8
+    urdf_layers: 2
+    angle_layers: 2
+    state_layers: 6
+    angle_mlp_hidden: 256
+    embed_mlp_hidden: 1024
+    fusion: adaln_zero
+    graph_bias:
+      spatial: true
+      parent: true
+      child: true
+      zero_init: true
+    zero_init_gate:
+      enable: false
+    urdf_injection:
+      enable: true
+  frame_codec:
+    block_style: standard_prenorm
+    decoder_attention: bidirectional
+  quantizer:
+    backend: vqp
+    codebook_dim: 256
+    codebook_size: 2048
+    num_codebooks: 2
+    num_quantizers: 2
+    beta: 0.1
+    ae_warmup_epochs: 0
+    ema:
+      enable: true
+      decay: 0.8
+      kmeans_iters: 100
+      update_unit: accumulation_boundary
+      dead_code_fraction: 0.1
+    rotation_trick:
+      enable: false
+    entropy:
+      weight: 0.0
+  decoder:
+    post_quant_proj_layers: 4
+    mlp_hidden: 1024
+    ee_dim: 9
+    joint_dim: 1
+    dual_branch:
+      enable: false
+    output_with_ee: true
+  losses:
+    ee:
+      type: xyz_rot_geodesic
+      xyz_loss_type: l1
+      xyz_weight: 1.0
+      rot_weight: 0.5
+    joint:
+      type: l1
+      weight: 1.0
+wandb:
+  project: RoboMorpher
+  name: robomorpher
+  mode: online
+evaluation:
+  fk:
+    enable: true

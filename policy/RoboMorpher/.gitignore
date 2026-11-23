@@ -1,0 +1,22 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+/robomorpher/third_party/MorphGen
+.pip_tmp/
+
+# Local model assets and training outputs.
+/data
+/logs
+/.cache
+/checkpoints
+/robomorpher/pretrained
+wandb/
+results/
+eval_logs/
+.generated/
+
+*.pt
+*.safetensors
+*.log
+.sshway-upload-resume.*

@@ -1,0 +1,49 @@
+# Python 3.10 pins. install.sh adds torch==2.8.0+cu128 and torchvision==0.23.0+cu128
+# when the interpreter does not already have PyTorch, and does not replace an existing CUDA stack.
+transformers==4.57.1
+omegaconf==2.3.0
+huggingface-hub==0.35.3
+diffusers==0.35.1
+qwen-vl-utils==0.0.14
+tokenizers==0.22.2
+av==17.1.0
+vector-quantize-pytorch==1.31.1
+einx==0.4.3
+torch-einops-utils==0.1.22
+frozendict==2.4.7
+
+# Dataset API only. install.sh installs this with --no-deps: lerobot 0.4.4
+# requires av<16, which conflicts with av==17.1.0.
+lerobot==0.4.4
+datasets==4.8.4
+
+# LeRobot 0.4.4 / datasets 4.8.4 requires pyarrow>=21 (json_ extension type).
+pyarrow==22.0.0
+
+# URDF parsing and Zarr tokenizer datasets.
+numpy==1.26.4
+scipy==1.15.3
+transforms3d==0.4.2
+PyYAML==6.0.3
+h5py==3.11.0
+zarr==2.18.3
+numcodecs==0.13.1
+
+# Training, logging, and image decoding.
+accelerate==1.13.0
+wandb==0.17.0
+rich==14.3.4
+einops==0.8.2
+pillow==12.2.0
+opencv-python-headless==4.11.0.86
+
+# FlashAttention is built against the active PyTorch installation.
+flash-attn==2.7.4.post1
+
+# Policy server.
+websockets==16.0
+msgpack==1.1.2
+
+# XPolicyLab WebSocket protocol.
+msgpack-numpy==0.4.8
+pydantic>=2.5
